@@ -158,7 +158,6 @@ def main(args):
     # Data augmentation transforms
     transform_train = transforms.Compose([
         transforms.Resize((args.img_size, args.img_size)),
-        transforms.RandomHorizontalFlip(),
         transforms.PILToTensor()
     ])
 
@@ -180,6 +179,7 @@ def main(args):
 
     data_loader_train = torch.utils.data.DataLoader(
         dataset_train, sampler=sampler_train,
+        random_hflip_prob=0.5,
         batch_size=args.batch_size,
         num_workers=args.num_workers,
         pin_memory=args.pin_mem,
