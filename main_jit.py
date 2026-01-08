@@ -165,6 +165,7 @@ def main(args):
         args.sar_train_path,
         args.opt_train_path,
         transform=transform_train,
+        random_hflip_prob=0.5,
         hint_dropout_prob=args.hint_dropout_prob,
         hint_max_ratio=args.hint_max_ratio,
         hint_color_thresh=args.hint_color_thresh,
@@ -179,7 +180,6 @@ def main(args):
 
     data_loader_train = torch.utils.data.DataLoader(
         dataset_train, sampler=sampler_train,
-        random_hflip_prob=0.5,
         batch_size=args.batch_size,
         num_workers=args.num_workers,
         pin_memory=args.pin_mem,
