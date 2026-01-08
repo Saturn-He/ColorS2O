@@ -4,6 +4,7 @@ from pathlib import Path
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
+from torchvision.transforms import functional as TF
 
 
 IMG_EXTENSIONS = {".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff"}
@@ -43,6 +44,7 @@ class PairedImageDirDataset(Dataset):
         sar_root,
         opt_root,
         transform=None,
+        random_hflip_prob=0.0,
         hint_dropout_prob=0.5,
         hint_max_ratio=0.05,
         hint_color_thresh=0.1,
@@ -52,6 +54,7 @@ class PairedImageDirDataset(Dataset):
         self.sar_root = sar_root
         self.opt_root = opt_root
         self.transform = transform
+        self.random_hflip_prob = random_hflip_prob
         self.hint_dropout_prob = hint_dropout_prob
         self.hint_max_ratio = hint_max_ratio
         self.hint_color_thresh = hint_color_thresh
@@ -111,6 +114,9 @@ class PairedImageDirDataset(Dataset):
         opt_path = self.opt_files[idx]
         sar_img = Image.open(sar_path).convert("L")
         opt_img = Image.open(opt_path).convert("RGB")
+        if self.random_hflip_prob > 0 and torch.rand(1).item() < self.random_hflip_prob:
+            sar_img = TF.hflip(sar_img)
+            opt_img = TF.hflip(opt_img)
         if self.transform is not None:
             sar_img = self.transform(sar_img)
             opt_img = self.transform(opt_img)
