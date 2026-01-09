@@ -72,6 +72,16 @@ def get_args_parser():
     parser.add_argument('--noise_scale', default=1.0, type=float)
     parser.add_argument('--t_eps', default=5e-2, type=float)
     parser.add_argument('--label_drop_prob', default=0.1, type=float)
+    parser.add_argument('--enabled_losses', nargs='+', default=['ab', 'perc', 'sam'],
+                        help='Enabled x-loss terms: ab, perc, sam')
+    parser.add_argument('--lambda_v', default=1.0, type=float,
+                        help='Weight for v loss')
+    parser.add_argument('--lambda_ab', default=5.0, type=float,
+                        help='Weight for Lab ab L1 loss')
+    parser.add_argument('--lambda_perc', default=0.5, type=float,
+                        help='Weight for perceptual loss')
+    parser.add_argument('--lambda_sam', default=2.0, type=float,
+                        help='Weight for SAM loss')
 
     parser.add_argument('--seed', default=77, type=int)
     parser.add_argument('--start_epoch', default=0, type=int, metavar='N',
