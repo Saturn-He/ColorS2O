@@ -1,5 +1,7 @@
+import lpips
 import torch
 import torch.nn as nn
+from kornia.color import rgb_to_lab
 from model_jit import JiT_models
 
 
@@ -25,6 +27,18 @@ class Denoiser(nn.Module):
         self.P_std = args.P_std
         self.t_eps = args.t_eps
         self.noise_scale = args.noise_scale
+        self.enabled_losses = set(args.enabled_losses)
+        self.lambda_v = args.lambda_v
+        self.lambda_ab = args.lambda_ab
+        self.lambda_perc = args.lambda_perc
+        self.lambda_sam = args.lambda_sam
+        self.loss_eps = 1e-6
+        self.lpips_model = None
+        if "perc" in self.enabled_losses:
+            self.lpips_model = lpips.LPIPS(net="vgg")
+            self.lpips_model.eval()
+            for param in self.lpips_model.parameters():
+                param.requires_grad = False
 
         # ema
         self.ema_decay1 = args.ema_decay1
@@ -61,9 +75,31 @@ class Denoiser(nn.Module):
         x_pred = self.net(z, t.flatten(), labels_dropped, sar_img)
         v_pred = (x_pred - z) / (1 - t).clamp_min(self.t_eps)
 
-        # l2 loss
-        loss = (v - v_pred) ** 2
-        loss = loss.mean(dim=(1, 2, 3)).mean()
+        # v loss (l2)
+        v_loss = (v - v_pred) ** 2
+        v_loss = v_loss.mean(dim=(1, 2, 3)).mean()
+        loss = self.lambda_v * v_loss
+
+        if "ab" in self.enabled_losses:
+            x_lab = rgb_to_lab(x_pred.clamp(0.0, 1.0))
+            opt_lab = rgb_to_lab(opt_img.clamp(0.0, 1.0))
+            ab_loss = torch.abs(x_lab[:, 1:, ...] - opt_lab[:, 1:, ...]).mean()
+            loss = loss + self.lambda_ab * ab_loss
+
+        if "perc" in self.enabled_losses and self.lpips_model is not None:
+            x_norm = x_pred.clamp(-1.0, 1.0)
+            opt_norm = opt_img.clamp(-1.0, 1.0)
+            perc_loss = self.lpips_model(x_norm, opt_norm).mean()
+            loss = loss + self.lambda_perc * perc_loss
+
+        if "sam" in self.enabled_losses:
+            dot = (x_pred * opt_img).sum(dim=1)
+            denom = torch.norm(x_pred, dim=1) * torch.norm(opt_img, dim=1)
+            denom = denom.clamp_min(self.loss_eps)
+            cos_angle = dot / denom
+            cos_angle = torch.clamp(cos_angle, -1.0 + self.loss_eps, 1.0 - self.loss_eps)
+            sam_loss = torch.acos(cos_angle).mean()
+            loss = loss + self.lambda_sam * sam_loss
 
         return loss
 
