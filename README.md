@@ -24,6 +24,23 @@ CUDA_VISIBLE_DEVICES=7 torchrun --nproc_per_node=1 --master-port=29501 main_jit.
 
 CUDA_VISIBLE_DEVICES=7 torchrun --nproc_per_node=1 --master-port=29506 main_jit.py   --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT/round1"   --sar_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainA"   --opt_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainB"   --img_size 512 --resume "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT/round1"
 
+### EP1：v_loss + L_ab + L_perc + L_sam
+
+CUDA_VISIBLE_DEVICES=6 torchrun --nproc_per_node=1 --master-port=29501 main_jit.py   --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_loss_only/round1_ab_perc_sam"   --sar_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainA"   --opt_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainB"  --img_size 512  --enabled_losses ab perc sam
+
+### EP2：v_loss + L_ab
+
+CUDA_VISIBLE_DEVICES=6 torchrun --nproc_per_node=1 --master-port=29502 main_jit.py   --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_loss_only/round1/ab"   --sar_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainA"   --opt_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainB"  --img_size 512  --enabled_losses ab
+
+### EP3：v_loss + L_perc
+
+CUDA_VISIBLE_DEVICES=6 torchrun --nproc_per_node=1 --master-port=29503 main_jit.py   --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_loss_only/round1/perc"   --sar_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainA"   --opt_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainB"  --img_size 512  --enabled_losses perc
+
+### EP4：v_loss + L_sam
+
+CUDA_VISIBLE_DEVICES=6 torchrun --nproc_per_node=1 --master-port=29504 main_jit.py   --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_loss_only/round1/sam"   --sar_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainA"   --opt_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainB"  --img_size 512  --enabled_losses sam
+
+
 ### Train on SEN-SCENE:
 
 CUDA_VISIBLE_DEVICES=7 torchrun --nproc_per_node=1 --master-port=29504 main_jit.py --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/scene/caJiT/round1" --sar_train_path="/data/hjf/Dataset/SEN12_Scene/trainA" --opt_train_path="/data/hjf/Dataset/SEN12_Scene/trainB" --img_size=256 --resume "/NAS_data/hjf/JiTcolor/checkpoints/scene/caJiT/round1"
