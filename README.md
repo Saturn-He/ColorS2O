@@ -78,6 +78,23 @@ CUDA_VISIBLE_DEVICES=7 torchrun --nproc_per_node=1 --master_port=29503 main_jit.
 
 CUDA_VISIBLE_DEVICES=5 torchrun --nproc_per_node=1 --master_port=29507 main_jit.py --evaluate_gen --resume /NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT/round3 --sar_test_path /NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/testA --output_dir /NAS_data/hjf/JiTcolor/outputs/SAR2Opt/caJiT/round3 --img_size 512 --gen_bsz 8 --keep_outputs
 
+### EP1：v_loss + L_ab + L_perc + L_sam
+
+CUDA_VISIBLE_DEVICES=6 torchrun --nproc_per_node=1 --master-port=29501 main_jit.py   --resume "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_loss_only/round1_ab_perc_sam"   --sar_test_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/testA"   --img_size 512  --enabled_losses ab perc sam  --evaluate_gen  --gen_bsz 8 --keep_outputs  --output_dir "/NAS_data/hjf/JiTcolor/outputs/SAR2Opt/caJiT_loss_only/round1_ab_perc_sam"
+
+### EP2：v_loss + L_ab
+
+CUDA_VISIBLE_DEVICES=6 torchrun --nproc_per_node=1 --master-port=29502 main_jit.py   --resume "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_loss_only/round1/ab"   --sar_test_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/testA"   --img_size 512  --enabled_losses ab  --evaluate_gen  --gen_bsz 8 --keep_outputs  --output_dir "/NAS_data/hjf/JiTcolor/outputs/SAR2Opt/caJiT_loss_only/round1/ab"
+
+### EP3：v_loss + L_perc
+
+CUDA_VISIBLE_DEVICES=7 torchrun --nproc_per_node=1 --master-port=29503 main_jit.py   --resume "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_loss_only/round1/perc"   --sar_test_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/testA"   --img_size 512  --enabled_losses perc  --evaluate_gen  --gen_bsz 8 --keep_outputs  --output_dir "/NAS_data/hjf/JiTcolor/outputs/SAR2Opt/caJiT_loss_only/round1/perc"
+
+### EP4：v_loss + L_sam
+
+CUDA_VISIBLE_DEVICES=7 torchrun --nproc_per_node=1 --master-port=29504 main_jit.py   --resume "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_loss_only/round1/sam"   --sar_test_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/testA"   --img_size 512  --enabled_losses sam  --evaluate_gen  --gen_bsz 8 --keep_outputs  --output_dir "/NAS_data/hjf/JiTcolor/outputs/SAR2Opt/caJiT_loss_only/round1/sam"
+
+
 ### Inference on GF3：
 
 CUDA_VISIBLE_DEVICES=7 torchrun --nproc_per_node=1 --master_port=29504 main_jit.py --evaluate_gen --resume /NAS_data/hjf/JiTcolor/checkpoints/GF3 --sar_test_path /NAS_data/yjy/GF3_High_Res/testA --output_dir /NAS_data/hjf/JiTcolor/outputs/GF3/round1 --img_size 256 --gen_bsz 8 --keep_outputs
