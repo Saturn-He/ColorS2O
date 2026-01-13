@@ -29,9 +29,15 @@ class Denoiser(nn.Module):
         self.noise_scale = args.noise_scale
         self.enabled_losses = set(args.enabled_losses)
         self.lambda_v = args.lambda_v
-        self.lambda_ab = args.lambda_ab
-        self.lambda_perc = args.lambda_perc
-        self.lambda_sam = args.lambda_sam
+        self.lambda_ab_max = args.lambda_ab_max
+        self.lambda_ab_t0 = args.lambda_ab_t0
+        self.lambda_ab_alpha = args.lambda_ab_alpha
+        self.lambda_perc_max = args.lambda_perc_max
+        self.lambda_perc_t0 = args.lambda_perc_t0
+        self.lambda_perc_alpha = args.lambda_perc_alpha
+        self.lambda_sam_max = args.lambda_sam_max
+        self.lambda_sam_t0 = args.lambda_sam_t0
+        self.lambda_sam_alpha = args.lambda_sam_alpha
         self.loss_eps = 1e-6
         self.lpips_model = None
         if "perc" in self.enabled_losses:
@@ -61,6 +67,9 @@ class Denoiser(nn.Module):
         else:
             raise ValueError(f"{name} must be a scalar or a 1D tensor with batch size.")
         return (loss_per_sample * weight_tensor).mean()
+
+    def _lambda_color(self, t, lambda_max, t0, alpha):
+        return lambda_max * torch.sigmoid(alpha * (t - t0) / (1 - t0))
         
     def drop_labels(self, labels):
         drop = torch.rand(labels.shape[0], device=labels.device) < self.label_drop_prob
@@ -76,7 +85,8 @@ class Denoiser(nn.Module):
             labels = torch.zeros(opt_img.size(0), device=opt_img.device, dtype=torch.long)
         labels_dropped = self.drop_labels(labels) if self.training else labels
 
-        t = self.sample_t(opt_img.size(0), device=opt_img.device).view(-1, *([1] * (opt_img.ndim - 1)))
+        t_flat = self.sample_t(opt_img.size(0), device=opt_img.device)
+        t = t_flat.view(-1, *([1] * (opt_img.ndim - 1)))
         e = torch.randn_like(opt_img) * self.noise_scale
 
         z = t * opt_img + (1 - t) * e
@@ -91,25 +101,34 @@ class Denoiser(nn.Module):
         loss = self._apply_sample_weights(v_loss, self.lambda_v, "lambda_v")
 
         if "ab" in self.enabled_losses:
+            lambda_ab = self._lambda_color(
+                t_flat, self.lambda_ab_max, self.lambda_ab_t0, self.lambda_ab_alpha
+            )
             x_lab = rgb_to_lab(x_pred.clamp(0.0, 1.0))
             opt_lab = rgb_to_lab(opt_img.clamp(0.0, 1.0))
             ab_loss = torch.abs(x_lab[:, 1:, ...] - opt_lab[:, 1:, ...]).mean(dim=(1, 2, 3))
-            loss = loss + self._apply_sample_weights(ab_loss, self.lambda_ab, "lambda_ab")
+            loss = loss + self._apply_sample_weights(ab_loss, lambda_ab, "lambda_ab")
 
         if "perc" in self.enabled_losses and self.lpips_model is not None:
+            lambda_perc = self._lambda_color(
+                t_flat, self.lambda_perc_max, self.lambda_perc_t0, self.lambda_perc_alpha
+            )
             x_norm = x_pred.clamp(-1.0, 1.0)
             opt_norm = opt_img.clamp(-1.0, 1.0)
             perc_loss = self.lpips_model(x_norm, opt_norm).view(opt_img.size(0), -1).mean(dim=1)
-            loss = loss + self._apply_sample_weights(perc_loss, self.lambda_perc, "lambda_perc")
+            loss = loss + self._apply_sample_weights(perc_loss, lambda_perc, "lambda_perc")
 
         if "sam" in self.enabled_losses:
+            lambda_sam = self._lambda_color(
+                t_flat, self.lambda_sam_max, self.lambda_sam_t0, self.lambda_sam_alpha
+            )
             dot = (x_pred * opt_img).sum(dim=1)
             denom = torch.norm(x_pred, dim=1) * torch.norm(opt_img, dim=1)
             denom = denom.clamp_min(self.loss_eps)
             cos_angle = dot / denom
             cos_angle = torch.clamp(cos_angle, -1.0 + self.loss_eps, 1.0 - self.loss_eps)
             sam_loss = torch.acos(cos_angle).mean(dim=(1, 2))
-            loss = loss + self._apply_sample_weights(sam_loss, self.lambda_sam, "lambda_sam")
+            loss = loss + self._apply_sample_weights(sam_loss, lambda_sam, "lambda_sam")
 
         return loss
 
