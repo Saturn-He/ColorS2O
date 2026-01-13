@@ -76,12 +76,24 @@ def get_args_parser():
                         help='Enabled x-loss terms: ab, perc, sam')
     parser.add_argument('--lambda_v', default=1.0, type=float,
                         help='Weight for v loss')
-    parser.add_argument('--lambda_ab', default=0.5, type=float,
-                        help='Weight for Lab ab L1 loss')
-    parser.add_argument('--lambda_perc', default=0.5, type=float,
-                        help='Weight for perceptual loss')
-    parser.add_argument('--lambda_sam', default=2.0, type=float,
-                        help='Weight for SAM loss')
+    parser.add_argument('--lambda_ab_max', default=1.5, type=float,
+                        help='Max weight for Lab ab L1 loss')
+    parser.add_argument('--lambda_ab_t0', default=0.55, type=float,
+                        help='Lab ab lambda(t) t0')
+    parser.add_argument('--lambda_ab_alpha', default=10.0, type=float,
+                        help='Lab ab lambda(t) alpha')
+    parser.add_argument('--lambda_perc_max', default=0.6, type=float,
+                        help='Max weight for perceptual loss')
+    parser.add_argument('--lambda_perc_t0', default=0.75, type=float,
+                        help='Perceptual lambda(t) t0')
+    parser.add_argument('--lambda_perc_alpha', default=5.0, type=float,
+                        help='Perceptual lambda(t) alpha')
+    parser.add_argument('--lambda_sam_max', default=0.1, type=float,
+                        help='Max weight for SAM loss')
+    parser.add_argument('--lambda_sam_t0', default=0.7, type=float,
+                        help='SAM lambda(t) t0')
+    parser.add_argument('--lambda_sam_alpha', default=12.0, type=float,
+                        help='SAM lambda(t) alpha')
 
     parser.add_argument('--seed', default=77, type=int)
     parser.add_argument('--start_epoch', default=0, type=int, metavar='N',
