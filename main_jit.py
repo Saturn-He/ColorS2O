@@ -76,7 +76,7 @@ def get_args_parser():
                         help='Enabled x-loss terms: ab, perc, sam')
     parser.add_argument('--lambda_v', default=1.0, type=float,
                         help='Weight for v loss')
-    parser.add_argument('--lambda_ab', default=5.0, type=float,
+    parser.add_argument('--lambda_ab', default=0.5, type=float,
                         help='Weight for Lab ab L1 loss')
     parser.add_argument('--lambda_perc', default=0.5, type=float,
                         help='Weight for perceptual loss')
