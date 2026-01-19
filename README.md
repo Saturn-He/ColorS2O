@@ -58,10 +58,10 @@ CUDA_VISIBLE_DEVICES=2,3,5,7 torchrun --nproc_per_node=4 --master-port=29509 mai
 
 ### Train on scene:
 
-CUDA_VISIBLE_DEVICES=3 torchrun --nproc_per_node=1 --master_port=29501 main_jit.py \
+CUDA_VISIBLE_DEVICES=5 torchrun --nproc_per_node=1 --master_port=29505 main_jit.py \
   --sar_train_path "/data/hjf/Dataset/SEN12_Scene/trainA" \
   --opt_train_path "/data/hjf/Dataset/SEN12_Scene/trainB" \
-  --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/scene/caJiT_CP/round2_inference_with_cp" \
+  --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/scene/caJiT_CP/round3_inference_with_cp" \
   --img_size 256 \
   --hint_dropout_prob 0.5 \
   --hint_max_ratio 0.05 \
