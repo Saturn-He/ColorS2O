@@ -95,6 +95,7 @@ def evaluate(model_without_ddp, args, epoch, batch_size=64, log_writer=None):
             hint_max_ratio=args.hint_max_ratio,
             hint_color_thresh=args.hint_color_thresh,
             hint_num_regions=args.hint_num_regions,
+            hint_sampling_mode=args.hint_sampling_mode,
             return_names=True,
         )
     else:
