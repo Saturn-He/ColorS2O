@@ -56,6 +56,18 @@ CUDA_VISIBLE_DEVICES=2,3,5,7 torchrun --nproc_per_node=4 --master-port=29509 mai
   --hint_loss_weight 2.0 \
   --batch_size 2
 
+CUDA_VISIBLE_DEVICES=1 torchrun --nproc_per_node=1 --master-port=29509 main_jit.py \
+  --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_CP/round3_CP_print" \
+  --sar_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainA" \
+  --opt_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainB" \
+  --img_size 512 \
+  --hint_dropout_prob 0.5 \
+  --hint_max_ratio 0.05 \
+  --hint_color_thresh 0.1 \
+  --hint_num_regions 4 \
+  --hint_loss_weight 2.0 \
+  --batch_size 1
+
 ### Train on scene:
 
 CUDA_VISIBLE_DEVICES=5 torchrun --nproc_per_node=1 --master_port=29505 main_jit.py \
