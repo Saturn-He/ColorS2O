@@ -22,6 +22,10 @@ def train_one_epoch(model, model_without_ddp, data_loader, optimizer, device, ep
     metric_logger.add_meter('lr', misc.SmoothedValue(window_size=1, fmt='{value:.6f}'))
     header = 'Epoch: [{}]'.format(epoch)
     print_freq = 20
+    color_hint_dir = None
+    if args is not None and args.output_dir:
+        color_hint_dir = os.path.join(args.output_dir, "color_hints", f"rank{misc.get_rank()}")
+        os.makedirs(color_hint_dir, exist_ok=True)
 
     optimizer.zero_grad()
 
@@ -31,6 +35,13 @@ def train_one_epoch(model, model_without_ddp, data_loader, optimizer, device, ep
     for data_iter_step, (sar_img, opt_img, hint_color, hint_mask) in enumerate(
         metric_logger.log_every(data_loader, print_freq, header)
     ):
+        if color_hint_dir is not None:
+            batch_hints = hint_color.detach().cpu().numpy()
+            for b_id in range(batch_hints.shape[0]):
+                hint_img = np.round(np.clip(batch_hints[b_id].transpose([1, 2, 0]), 0, 255)).astype(np.uint8)
+                hint_img = hint_img[:, :, ::-1]
+                filename = f"epoch{epoch:04d}_step{data_iter_step:06d}_idx{b_id:02d}.png"
+                cv2.imwrite(os.path.join(color_hint_dir, filename), hint_img)
         # per iteration (instead of per epoch) lr scheduler
         lr_sched.adjust_learning_rate(optimizer, data_iter_step / len(data_loader) + epoch, args)
 
