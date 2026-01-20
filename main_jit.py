@@ -64,6 +64,9 @@ def get_args_parser():
                         help='Number of semantic hint regions to sample per image')
     parser.add_argument('--hint_loss_weight', default=2.0, type=float,
                         help='Extra loss weight on hint pixels')
+    parser.add_argument('--hint_sampling_mode', default='stripe', type=str,
+                        choices=['stripe', 'dot'],
+                        help='Hint sampling mode: stripe or dot')
 
     parser.add_argument('--seed', default=77, type=int)
     parser.add_argument('--start_epoch', default=0, type=int, metavar='N',
@@ -170,6 +173,7 @@ def main(args):
         hint_max_ratio=args.hint_max_ratio,
         hint_color_thresh=args.hint_color_thresh,
         hint_num_regions=args.hint_num_regions,
+        hint_sampling_mode=args.hint_sampling_mode,
     )
     print(dataset_train)
 
