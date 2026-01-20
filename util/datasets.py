@@ -1,3 +1,4 @@
+import math
 import os
 from pathlib import Path
 
@@ -49,6 +50,7 @@ class PairedImageDirDataset(Dataset):
         hint_max_ratio=0.05,
         hint_color_thresh=0.1,
         hint_num_regions=1,
+        hint_sampling_mode="stripe",
         return_names=False,
     ):
         self.sar_root = sar_root
@@ -59,6 +61,7 @@ class PairedImageDirDataset(Dataset):
         self.hint_max_ratio = hint_max_ratio
         self.hint_color_thresh = hint_color_thresh
         self.hint_num_regions = hint_num_regions
+        self.hint_sampling_mode = hint_sampling_mode
         self.return_names = return_names
         self.sar_files = _list_images(sar_root)
         self.opt_files = _list_images(opt_root)
@@ -83,14 +86,42 @@ class PairedImageDirDataset(Dataset):
         opt_float = opt_img.to(torch.float32) / 255.0
         hint_mask = torch.zeros(height, width, dtype=torch.bool)
 
-        for _ in range(self.hint_num_regions):
+        yy, xx = torch.meshgrid(
+            torch.arange(height, dtype=torch.float32),
+            torch.arange(width, dtype=torch.float32),
+            indexing="ij",
+        )
+        attempts = 0
+        max_attempts = 1000
+        hint_count = 0
+
+        if self.hint_sampling_mode not in {"stripe", "dot"}:
+            raise ValueError("hint_sampling_mode must be 'stripe' or 'dot'.")
+
+        while hint_count < max_pixels and attempts < max_attempts:
+            attempts += 1
             seed_y = torch.randint(0, height, (1,)).item()
             seed_x = torch.randint(0, width, (1,)).item()
-            seed_color = opt_float[:, seed_y, seed_x].view(3, 1, 1)
-            color_dist = (opt_float - seed_color).pow(2).sum(dim=0).sqrt()
-            hint_mask |= color_dist <= self.hint_color_thresh
 
-        hint_count = int(hint_mask.sum().item())
+            if self.hint_sampling_mode == "stripe":
+                theta = torch.empty(1).uniform_(0.0, math.pi).item()
+                thickness = torch.empty(1).uniform_(1.0, 4.0).item()
+                length = torch.empty(1).uniform_(5.0, 30.0).item()
+                x_rel = xx - seed_x
+                y_rel = yy - seed_y
+                cos_t = math.cos(theta)
+                sin_t = math.sin(theta)
+                x_rot = x_rel * cos_t + y_rel * sin_t
+                y_rot = -x_rel * sin_t + y_rel * cos_t
+                stripe_mask = (x_rot.abs() <= length / 2.0) & (y_rot.abs() <= thickness / 2.0)
+                hint_mask |= stripe_mask
+            else:
+                radius = torch.empty(1).uniform_(1.0, 6.0).item()
+                circle_mask = (xx - seed_x).pow(2) + (yy - seed_y).pow(2) <= radius**2
+                hint_mask |= circle_mask
+
+            hint_count = int(hint_mask.sum().item())
+        
         if hint_count == 0:
             seed_y = torch.randint(0, height, (1,)).item()
             seed_x = torch.randint(0, width, (1,)).item()
