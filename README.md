@@ -56,8 +56,8 @@ CUDA_VISIBLE_DEVICES=2,3,5,7 torchrun --nproc_per_node=4 --master-port=29509 mai
   --hint_loss_weight 2.0 \
   --batch_size 2
 
-CUDA_VISIBLE_DEVICES=5 torchrun --nproc_per_node=1 --master-port=29508 main_jit.py \
-  --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_CP/round4/noLoss_noHintsDropout_stripe" \
+  CUDA_VISIBLE_DEVICES=7 torchrun --nproc_per_node=1 --master-port=29505 main_jit.py \
+  --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_CP/round4/noLoss_noHintsDropout_stripe_concat" \
   --sar_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainA" \
   --opt_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainB" \
   --img_size 512 \
@@ -66,8 +66,8 @@ CUDA_VISIBLE_DEVICES=5 torchrun --nproc_per_node=1 --master-port=29508 main_jit.
   --hint_sampling_mode stripe \
   --hint_on_gpu
 
-CUDA_VISIBLE_DEVICES=4 torchrun --nproc_per_node=1 --master-port=29506 main_jit.py \
-  --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_CP/round4/noLoss_noHintsDropout_dot" \
+CUDA_VISIBLE_DEVICES=6 torchrun --nproc_per_node=1 --master-port=29504 main_jit.py \
+  --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_CP/round4/noLoss_noHintsDropout_dot_concat" \
   --sar_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainA" \
   --opt_train_path "/NAS_data/yjy/Parallel-GAN-main/Parallel-GAN-main/datasets/sar2opt/trainB" \
   --img_size 512 \
