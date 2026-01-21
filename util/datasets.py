@@ -200,8 +200,9 @@ class PairedImageDirDataset(Dataset):
                 meshgrid=meshgrid,
             )
             if self.return_names:
-            return sar_img, opt_img, sar_path.name
-        return sar_img, opt_img
-        if self.return_names:
-            return sar_img, opt_img, hint_color, hint_mask, sar_path.name
-        return sar_img, opt_img, hint_color, hint_mask
+                return sar_img, opt_img, hint_color, hint_mask, sar_path.name
+            return sar_img, opt_img, hint_color, hint_mask
+        else:
+            if self.return_names:
+                return sar_img, opt_img, sar_path.name
+            return sar_img, opt_img
