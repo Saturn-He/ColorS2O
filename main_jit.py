@@ -67,7 +67,9 @@ def get_args_parser():
     parser.add_argument('--hint_sampling_mode', default='stripe', type=str,
                         choices=['stripe', 'dot'],
                         help='Hint sampling mode: stripe or dot')
-
+    parser.add_argument('--hint_on_gpu', action='store_true',
+                        help='Generate color hints on GPU during training')
+    
     parser.add_argument('--seed', default=77, type=int)
     parser.add_argument('--start_epoch', default=0, type=int, metavar='N',
                         help='Starting epoch')
@@ -174,6 +176,7 @@ def main(args):
         hint_color_thresh=args.hint_color_thresh,
         hint_num_regions=args.hint_num_regions,
         hint_sampling_mode=args.hint_sampling_mode,
+        build_hints=not args.hint_on_gpu,
     )
     print(dataset_train)
 
