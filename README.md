@@ -63,7 +63,8 @@ CUDA_VISIBLE_DEVICES=5 torchrun --nproc_per_node=1 --master-port=29508 main_jit.
   --img_size 512 \
   --hint_dropout_prob 0 \
   --hint_loss_weight 0 \
-  --hint_sampling_mode stripe
+  --hint_sampling_mode stripe \
+  --hint_on_gpu
 
 CUDA_VISIBLE_DEVICES=4 torchrun --nproc_per_node=1 --master-port=29506 main_jit.py \
   --output_dir "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_CP/round4/noLoss_noHintsDropout_dot" \
