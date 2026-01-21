@@ -13,7 +13,7 @@ import util.lr_sched as lr_sched
 import torch_fidelity
 import copy
 
-from util.datasets import ImageDirDataset, PairedImageDirDataset
+from util.datasets import ImageDirDataset, PairedImageDirDataset, build_hints
 
 
 def train_one_epoch(model, model_without_ddp, data_loader, optimizer, device, epoch, log_writer=None, args=None):
@@ -28,16 +28,35 @@ def train_one_epoch(model, model_without_ddp, data_loader, optimizer, device, ep
     if log_writer is not None:
         print('log_dir: {}'.format(log_writer.log_dir))
 
-    for data_iter_step, (sar_img, opt_img, hint_color, hint_mask) in enumerate(
+    for data_iter_step, batch in enumerate(
         metric_logger.log_every(data_loader, print_freq, header)
     ):
         # per iteration (instead of per epoch) lr scheduler
         lr_sched.adjust_learning_rate(optimizer, data_iter_step / len(data_loader) + epoch, args)
 
+        if len(batch) == 4:
+            sar_img, opt_img, hint_color, hint_mask = batch
+            hint_on_gpu = False
+        elif len(batch) == 2:
+            sar_img, opt_img = batch
+            hint_on_gpu = True
+        else:
+            raise ValueError("Unexpected batch format for training.")
+
         # normalize image to [-1, 1]
         sar_img = sar_img.to(device, non_blocking=True).to(torch.float32).div_(255)
         sar_img = sar_img * 2.0 - 1.0
-        opt_img = opt_img.to(device, non_blocking=True).to(torch.float32).div_(255)
+        opt_img = opt_img.to(device, non_blocking=True)
+        if hint_on_gpu:
+            hint_color, hint_mask = build_hints(
+                opt_img,
+                hint_dropout_prob=args.hint_dropout_prob,
+                hint_max_ratio=args.hint_max_ratio,
+                hint_color_thresh=args.hint_color_thresh,
+                hint_num_regions=args.hint_num_regions,
+                hint_sampling_mode=args.hint_sampling_mode,
+            )
+        opt_img = opt_img.to(torch.float32).div_(255)
         opt_img = opt_img * 2.0 - 1.0
         hint_color = hint_color.to(device, non_blocking=True).to(torch.float32).div_(255)
         hint_color = hint_color * 2.0 - 1.0
