@@ -63,6 +63,26 @@ def build_hints(
     hint_sampling_mode="stripe",
     meshgrid=None,
 ):
+    if opt_img.dim() == 4:
+        _, _, height, width = opt_img.shape
+        if meshgrid is None:
+            meshgrid = _get_meshgrid(height, width, opt_img.device)
+        hint_colors = []
+        hint_masks = []
+        for img in opt_img:
+            hint_color, hint_mask = build_hints(
+                img,
+                hint_dropout_prob=hint_dropout_prob,
+                hint_max_ratio=hint_max_ratio,
+                hint_color_thresh=hint_color_thresh,
+                hint_num_regions=hint_num_regions,
+                hint_sampling_mode=hint_sampling_mode,
+                meshgrid=meshgrid,
+            )
+            hint_colors.append(hint_color)
+            hint_masks.append(hint_mask)
+        return torch.stack(hint_colors, dim=0), torch.stack(hint_masks, dim=0)
+        
     _, height, width = opt_img.shape
     max_pixels = max(1, int(hint_max_ratio * height * width))
 
