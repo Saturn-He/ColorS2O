@@ -73,7 +73,8 @@ CUDA_VISIBLE_DEVICES=4 torchrun --nproc_per_node=1 --master-port=29506 main_jit.
   --img_size 512 \
   --hint_dropout_prob 0 \
   --hint_loss_weight 0 \
-  --hint_sampling_mode dot
+  --hint_sampling_mode dot \
+  --hint_on_gpu
 
 
 ### Train on scene:
