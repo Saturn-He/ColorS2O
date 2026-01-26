@@ -209,3 +209,18 @@ CUDA_VISIBLE_DEVICES=3 torchrun --nproc_per_node=1 --master_port=29503 main_jit.
 ### Inference on SEN-SCENE：
 
 CUDA_VISIBLE_DEVICES=7 torchrun --nproc_per_node=1 --master_port=29505 main_jit.py --evaluate_gen --resume /NAS_data/hjf/JiTcolor/checkpoints/scene --sar_test_path /data/hjf/Dataset/SEN12_Scene/testA --output_dir /NAS_data/hjf/JiTcolor/outputs/scene/round1 --img_size 256 --gen_bsz 8 --keep_outputs
+
+CUDA_VISIBLE_DEVICES=7 torchrun --nproc_per_node=1 --master-port=29504 main_jit.py \
+  --resume "/NAS_data/hjf/JiTcolor/checkpoints/SAR2Opt/caJiT_CP/round4/noLoss_noHintsDropout_dot_concat" \
+  --output_dir "/NAS_data/hjf/JiTcolor/outputs/SAR2Opt/caJiT_CP/round4/noLoss_noHintsDropout_dot_concat" \
+  --sar_test_path "/data/hjf/Dataset/SEN12_Scene/testA" \
+  --opt_test_path "/data/hjf/Dataset/SEN12_Scene/testB" \
+  --img_size 256 \
+  --hint_dropout_prob 0 \
+  --hint_loss_weight 0 \
+  --hint_sampling_mode dot \
+  --hint_on_gpu \
+  --evaluate_gen \
+  --gen_bsz 8 \
+  --keep_outputs \
+  --use_hint_infer
