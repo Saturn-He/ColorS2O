@@ -11,7 +11,7 @@ class Denoiser(nn.Module):
         super().__init__()
         self.net = JiT_models[args.model](
             input_size=args.img_size,
-            in_channels=3,
+            in_channels=4,
             out_channels=3,
             num_classes=args.class_num,
             attn_drop=args.attn_dropout,
@@ -58,7 +58,8 @@ class Denoiser(nn.Module):
         z = t * opt_img + (1 - t) * e
         v = (opt_img - z) / (1 - t).clamp_min(self.t_eps)
 
-        x_pred = self.net(z, t.flatten(), labels_dropped, sar_img)
+        x_in = torch.cat([z, sar_img], dim=1)
+        x_pred = self.net(x_in, t.flatten(), labels_dropped, sar_img)
         v_pred = (x_pred - z) / (1 - t).clamp_min(self.t_eps)
 
         # l2 loss
@@ -95,11 +96,12 @@ class Denoiser(nn.Module):
     @torch.no_grad()
     def _forward_sample(self, z, t, labels, sar_img):
         # conditional
-        x_cond = self.net(z, t.flatten(), labels, sar_img)
+        x_in = torch.cat([z, sar_img], dim=1)
+        x_cond = self.net(x_in, t.flatten(), labels, sar_img)
         v_cond = (x_cond - z) / (1.0 - t).clamp_min(self.t_eps)
 
         # unconditional
-        x_uncond = self.net(z, t.flatten(), torch.full_like(labels, self.num_classes), sar_img)
+        x_uncond = self.net(x_in, t.flatten(), torch.full_like(labels, self.num_classes), sar_img)
         v_uncond = (x_uncond - z) / (1.0 - t).clamp_min(self.t_eps)
 
         # cfg interval
