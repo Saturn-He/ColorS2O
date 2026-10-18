@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+# data, weights, runs (keep the repository code-only)
+data/
+checkpoints/
+outputs/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.log
+events.out.tfevents.*
