@@ -1,0 +1,60 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper below."
+title: "ColorS2O: Controllable SAR-to-Optical Image Translation with Sparse Colour Anchors"
+type: software
+authors:
+  - family-names: He
+    given-names: Jingfei
+    orcid: "https://orcid.org/0009-0001-8551-9631"
+    affiliation: "Beijing Institute of Technology; University of Pavia"
+  - family-names: Shi
+    given-names: Hao
+    orcid: "https://orcid.org/0000-0002-2013-6592"
+    affiliation: "Beijing Institute of Technology"
+  - family-names: Chen
+    given-names: Yuhang
+    orcid: "https://orcid.org/0009-0007-6468-2169"
+    affiliation: "Beijing Institute of Technology"
+  - family-names: Fan
+    given-names: Rui
+    orcid: "https://orcid.org/0009-0009-6878-145X"
+    affiliation: "Beijing Institute of Technology"
+  - family-names: Gamba
+    given-names: Paolo
+    orcid: "https://orcid.org/0000-0002-9576-6337"
+    affiliation: "University of Pavia"
+  - family-names: Chen
+    given-names: Liang
+    orcid: "https://orcid.org/0000-0003-3273-5522"
+    affiliation: "Beijing Institute of Technology"
+repository-code: "https://github.com/Saturn-He/ColorS2O"
+license: MIT
+keywords:
+  - SAR-to-optical image translation
+  - controllable translation
+  - sparse colour anchors
+  - remote sensing
+preferred-citation:
+  type: article
+  title: "ColorS2O: Controllable SAR-to-Optical Image Translation with Sparse Colour Anchors"
+  authors:
+    - family-names: He
+      given-names: Jingfei
+      orcid: "https://orcid.org/0009-0001-8551-9631"
+    - family-names: Shi
+      given-names: Hao
+      orcid: "https://orcid.org/0000-0002-2013-6592"
+    - family-names: Chen
+      given-names: Yuhang
+      orcid: "https://orcid.org/0009-0007-6468-2169"
+    - family-names: Fan
+      given-names: Rui
+      orcid: "https://orcid.org/0009-0009-6878-145X"
+    - family-names: Gamba
+      given-names: Paolo
+      orcid: "https://orcid.org/0000-0002-9576-6337"
+    - family-names: Chen
+      given-names: Liang
+      orcid: "https://orcid.org/0000-0003-3273-5522"
+  year: 2026
+  status: submitted
