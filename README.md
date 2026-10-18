@@ -4,6 +4,10 @@ Official code for the paper of the same title (under review). If you use it, ple
 
 ColorS2O translates a SAR image into an RGB optical image. A sparse set of colour anchors controls the colours of the output. Anchors are small dots whose colours come from an optical observation of the same area. This repository contains the translator, for training and inference, and the anchor-sampling tool used in the paper.
 
+![Overview of ColorS2O](assets/framework.png)
+
+*Overview of ColorS2O. The SAR image is concatenated with the noisy optical state, while the sparse colour anchors are encoded by Mask-Guided Sparse Embedding (MGSE) and injected into every transformer block through gated cross-attention. During training, the chromatic and perceptual losses follow a time–epoch curriculum.*
+
 The code calls colour anchors *colour hints*. An anchor map is an image in `color_hint_by_dots/` that is black wherever there is no anchor.
 
 ## Repository contents
@@ -52,6 +56,10 @@ The config name `configs/sam2.1/sam2.1_hiera_l.yaml` resolves inside the bundled
 The loader pairs files in sorted order and stops with an error if two paired names differ. Names must match exactly, including the extension. Anchor maps are always written as `<name>.png`, so store the SAR and optical images as PNG files.
 
 ## 1. Generate colour anchors
+
+![Anchor sampling](assets/anchor_sampling.png)
+
+*Anchor sampling. SAM 2 extracts candidate regions from the optical image. A candidate dot is accepted only if it lies inside one region, passes the colour-dominance check and is far enough from the other accepted dots in the same region; accepted dots are filled with representative colours until the coverage target is reached. The lower panel shows the manual dot annotation that the sampler is designed to approximate.*
 
 Run the generator on the optical images of each split:
 
