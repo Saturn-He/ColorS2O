@@ -1,6 +1,6 @@
 # ColorS2O: Controllable SAR-to-Optical Image Translation with Sparse Colour Anchors
 
-Official code for the paper of the same title (under review). If you use it, please cite the paper (see [Citation](#citation)).
+Official code for the paper of the same title (under review). If you use it, please cite the paper (see [Citation](#-citation)).
 
 ColorS2O translates a SAR image into an RGB optical image. A sparse set of colour anchors controls the colours of the output. Anchors are small dots whose colours come from an optical observation of the same area. This repository contains the translator, for training and inference, and the anchor-sampling tool used in the paper.
 
@@ -25,7 +25,7 @@ The code calls colour anchors *colour hints*. An anchor map is an image in `colo
 | `fid_stats/` | ImageNet FID statistics from JiT, used by the built-in FID/IS report |
 | `FLOPs.py` | FLOPs and parameter count of the backbone |
 
-## Installation
+## 🛠️ Installation
 
 ```bash
 conda env create -f environment.yaml
@@ -43,7 +43,7 @@ wget -P checkpoints https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam
 
 The config name `configs/sam2.1/sam2.1_hiera_l.yaml` resolves inside the bundled `sam2/` package.
 
-## Data layout
+## 🗂️ Data layout
 
 ```text
 <DATA_ROOT>/
@@ -55,7 +55,7 @@ The config name `configs/sam2.1/sam2.1_hiera_l.yaml` resolves inside the bundled
 
 The loader pairs files in sorted order and stops with an error if two paired names differ. Names must match exactly, including the extension. Anchor maps are always written as `<name>.png`, so store the SAR and optical images as PNG files.
 
-## 1. Generate colour anchors
+## 🎨 1. Generate colour anchors
 
 ![Anchor sampling](assets/anchor_sampling.png)
 
@@ -135,7 +135,7 @@ from model_jit import JiT_models
 
 This variant embeds the anchor map and its mask with a plain patch embedding. The gated colour cross-attention is unchanged. Keep everything else fixed.
 
-## 2. Training
+## 🚀 2. Training
 
 ```bash
 CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 --master-port=29501 main_jit.py \
@@ -177,7 +177,7 @@ Each colour loss is activated along the diffusion time by its midpoint `t0`:
 
 A smaller `t0` makes the loss active over a wider and noisier range of diffusion times. With the defaults, the perceptual loss is activated before the chromatic loss. To reverse the order, use, for example, `--lambda_ab_t0 0.50 --lambda_perc_t0 0.75`.
 
-## 3. Testing and inference
+## 🔍 3. Testing and inference
 
 ```bash
 CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 --master-port=29502 main_jit.py \
@@ -202,7 +202,7 @@ CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 --master-port=29502 main_ji
 - With `--use_hint_infer ''`, the same weights translate from SAR alone. No anchor input reaches the colour branch, and the optical and anchor folders are not read.
 - After generation, the script prints FID and Inception Score against the ImageNet statistics in `fid_stats/`. These are not the metrics reported in the paper, which are computed on the saved images. This step supports `--img_size` 256 and 512 only, and `--keep_outputs ''` deletes the generated images after it.
 
-## Trained models
+## 📦 Trained models
 
 Trained weights are available from the corresponding author on reasonable request.
 
@@ -214,7 +214,7 @@ The JiT-derived code is released under the MIT License (`LICENSE`). The `sam2/` 
 
 ColorS2O builds on [JiT](https://github.com/LTH14/JiT) and uses [SAM 2](https://github.com/facebookresearch/sam2), [LPIPS](https://github.com/richzhang/PerceptualSimilarity), [Kornia](https://github.com/kornia/kornia) and [torch-fidelity](https://github.com/toshas/torch-fidelity).
 
-## Citation
+## 📖 Citation
 
 If you use this code, please cite the paper. GitHub's "Cite this repository" button uses `CITATION.cff`; the journal reference will be added after publication.
 
