@@ -1,6 +1,6 @@
 # ColorS2O: Controllable SAR-to-Optical Image Translation with Sparse Colour Anchors
 
-Official code for the paper of the same title (under review) If you use it, please cite the paper (see [Citation](#-citation)).
+Official code for the paper of the same title (under review). If you use it, please cite the paper (see [Citation](#-citation)).
 
 ColorS2O translates a SAR image into an RGB optical image. A sparse set of colour anchors controls the colours of the output. Anchors are small dots whose colours come from an optical observation of the same area. This repository contains the translator, for training and inference, and the anchor-sampling tool used in the paper.
 
