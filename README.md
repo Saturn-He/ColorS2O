@@ -119,22 +119,6 @@ A candidate dot is kept only if it lies entirely inside one SAM 2 region and pas
 
 The realised coverage in `summary.csv` can be lower than the target, because candidates that fail these checks are rejected. To change the coverage, edit `target_ratio`, for example to `0.01` or `0.03`. To disable the dominance check for the ablation, set `histogram_threshold=0`. For a fair comparison, change only that value and keep the data, the other settings and the training commands fixed.
 
-### Ablation without MGSE
-
-`denoiser.py` imports the full model:
-
-```python
-from model_jit_mask_guided_embed import JiT_models
-```
-
-For the variant without MGSE, replace this line with:
-
-```python
-from model_jit import JiT_models
-```
-
-This variant embeds the anchor map and its mask with a plain patch embedding. The gated colour cross-attention is unchanged. Keep everything else fixed.
-
 ## 🚀 2. Training
 
 ```bash
@@ -155,27 +139,6 @@ CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 --master-port=29501 main_ji
 - Checkpoints are written to `<OUTPUT_DIR>/checkpoint-last.pth` every `--save_last_freq` epochs (default 5), and to `checkpoint-<epoch>.pth` every 100 epochs.
 - To continue a run, add `--resume "<OUTPUT_DIR>"`. The option takes a directory and loads `checkpoint-last.pth` from it. If that file does not exist, training starts from scratch and the log shows a warning instead of `Resumed checkpoint from`.
 - `--sync_cuda_every_step ''` skips a CUDA synchronisation after every step that is only needed for debugging.
-
-### Loss ablations
-
-Change only `--enabled_losses`:
-
-```bash
---enabled_losses perc      # perceptual loss only
---enabled_losses ab        # chromatic loss only
---enabled_losses ab perc   # both, as in the paper
-```
-
-### Loss activation order
-
-Each colour loss is activated along the diffusion time by its midpoint `t0`:
-
-```bash
---lambda_ab_t0 0.75     # chromatic loss, default
---lambda_perc_t0 0.55   # perceptual loss, default
-```
-
-A smaller `t0` makes the loss active over a wider and noisier range of diffusion times. With the defaults, the perceptual loss is activated before the chromatic loss. To reverse the order, use, for example, `--lambda_ab_t0 0.50 --lambda_perc_t0 0.75`.
 
 ## 🔍 3. Testing and inference
 
@@ -201,10 +164,6 @@ CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 --master-port=29502 main_ji
 - `--evaluate_gen`, `--use_hint_infer`, `--keep_outputs` and `--sync_cuda_every_step` take a string. Any non-empty value enables the option, including `False`. To disable an option, pass an empty string, for example `--use_hint_infer ''`.
 - With `--use_hint_infer ''`, the same weights translate from SAR alone. No anchor input reaches the colour branch, and the optical and anchor folders are not read.
 - After generation, the script prints FID and Inception Score against the ImageNet statistics in `fid_stats/`. These are not the metrics reported in the paper, which are computed on the saved images. This step supports `--img_size` 256 and 512 only, and `--keep_outputs ''` deletes the generated images after it.
-
-## 📦 Trained models
-
-Trained weights are available from the corresponding author on reasonable request.
 
 ## Licence
 
