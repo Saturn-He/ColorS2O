@@ -189,7 +189,32 @@ If you use this code, please cite the paper. GitHub's "Cite this repository" but
 
 ## 🔗 Related Projects
 
-Explore our related work on SAR-to-optical image translation:
+Explore our related work on optical priors, colour control, and cross-tile consistency in SAR-to-optical image translation. Click an overview to view the full-size figure.
 
-- **[DOGAN](https://github.com/Saturn-He/DOGAN)** — DINO-based optical-prior-driven GAN for SAR-to-optical image translation.
-- **[XTile-S2O](https://github.com/Saturn-He/XTile-S2O)** — Cross-tile coherent SAR-to-optical image translation for full-scene mapping.
+### [DOGAN](https://github.com/Saturn-He/DOGAN)
+
+**DINO-Based Optical-Prior-Driven GAN for SAR-to-Optical Image Translation**
+
+<p>
+  <a href="https://github.com/Saturn-He/DOGAN/blob/main/assets/Overview_1.png">
+    <img src="https://raw.githubusercontent.com/Saturn-He/DOGAN/main/assets/Overview_1.png" width="360" alt="DOGAN framework overview">
+  </a>
+</p>
+
+DOGAN brings pretrained optical representations into GAN-based SAR-to-optical translation. A frozen DINO backbone, stacked optical-aware adapters, and multiscale domain alignment guide the generator during training. At inference, only the trained generator is needed to translate SAR images into optical-like images.
+
+[Explore DOGAN →](https://github.com/Saturn-He/DOGAN)
+
+### [XTile-S2O](https://github.com/Saturn-He/XTile-S2O)
+
+**Cross-Tile Coherent Full-Scene SAR-to-Optical Image Translation**
+
+<p>
+  <a href="https://github.com/Saturn-He/XTile-S2O/blob/main/assets/figures/overview.png">
+    <img src="https://raw.githubusercontent.com/Saturn-He/XTile-S2O/main/assets/figures/overview.png" width="360" alt="XTile-S2O framework overview">
+  </a>
+</p>
+
+XTile-S2O addresses consistency across tile boundaries when translating large SAR scenes. Cross-patch attention shares context among neighbouring tiles, while block-reassembly and overlap losses supervise cross-tile agreement. The repository provides training and inference code, dataset manifests, and evaluation tools for both image fidelity and full-scene coherence.
+
+[Explore XTile-S2O →](https://github.com/Saturn-He/XTile-S2O)
