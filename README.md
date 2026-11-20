@@ -173,6 +173,16 @@ The JiT-derived code is released under the MIT License (`LICENSE`). The `sam2/` 
 
 ColorS2O builds on [JiT](https://github.com/LTH14/JiT) and uses [SAM 2](https://github.com/facebookresearch/sam2), [LPIPS](https://github.com/richzhang/PerceptualSimilarity), [Kornia](https://github.com/kornia/kornia) and [torch-fidelity](https://github.com/toshas/torch-fidelity).
 
+## 🤝 Contributors
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/Saturn-He"><img src="https://avatars.githubusercontent.com/u/112156349?v=4&s=160" width="80" alt="Saturn-He"><br><sub><b>Saturn-He</b></sub></a></td>
+    <td align="center"><a href="https://github.com/SDD2021-car"><img src="https://avatars.githubusercontent.com/u/78991228?v=4&s=160" width="80" alt="SDD2021-car"><br><sub><b>SDD2021-car</b></sub></a></td>
+    <td align="center"><a href="https://github.com/HardCore666"><img src="https://avatars.githubusercontent.com/u/179420825?v=4&s=160" width="80" alt="HardCore666"><br><sub><b>HardCore666</b></sub></a></td>
+  </tr>
+</table>
+
 ## 📖 Citation
 
 If you use this code, please cite the paper. GitHub's "Cite this repository" button uses `CITATION.cff`; the journal reference will be added after publication.
