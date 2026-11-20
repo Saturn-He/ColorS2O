@@ -186,3 +186,10 @@ If you use this code, please cite the paper. GitHub's "Cite this repository" but
   howpublished = {\url{https://github.com/Saturn-He/ColorS2O}}
 }
 ```
+
+## 🔗 Related Projects
+
+Explore our related work on SAR-to-optical image translation:
+
+- **[DOGAN](https://github.com/Saturn-He/DOGAN)** — DINO-based optical-prior-driven GAN for SAR-to-optical image translation.
+- **[XTile-S2O](https://github.com/Saturn-He/XTile-S2O)** — Cross-tile coherent SAR-to-optical image translation for full-scene mapping.
