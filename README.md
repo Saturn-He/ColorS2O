@@ -201,7 +201,7 @@ Explore our related work on optical priors, colour control, and cross-tile consi
   </a>
 </p>
 
-DOGAN brings pretrained optical representations into GAN-based SAR-to-optical translation. A frozen DINO backbone, stacked optical-aware adapters, and multiscale domain alignment guide the generator during training. At inference, only the trained generator is needed to translate SAR images into optical-like images.
+DOGAN uses optical priors from a pretrained DINO model to guide GAN-based SAR-to-optical image translation.
 
 ### [XTile-S2O](https://github.com/Saturn-He/XTile-S2O)
 
@@ -213,7 +213,7 @@ DOGAN brings pretrained optical representations into GAN-based SAR-to-optical tr
   </a>
 </p>
 
-XTile-S2O addresses consistency across tile boundaries when translating large SAR scenes. Cross-patch attention shares context among neighbouring tiles, while block-reassembly and overlap losses supervise cross-tile agreement. The repository provides training and inference code, dataset manifests, and evaluation tools for both image fidelity and full-scene coherence.
+XTile-S2O shares context across neighbouring tiles to improve spatial consistency in full-scene SAR-to-optical translation.
 
 ### [SADBM](https://github.com/AproZC/SADBM)
 
