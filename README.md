@@ -219,4 +219,10 @@ XTile-S2O addresses consistency across tile boundaries when translating large SA
 
 **Structure-Aware Diffusion Bridge Model for SAR-to-Optical Image Translation**
 
+<p>
+  <a href="https://github.com/Saturn-He/DOGAN/blob/main/assets/sadbm-teaser.jpg">
+    <img src="https://raw.githubusercontent.com/Saturn-He/DOGAN/main/assets/sadbm-teaser.jpg" width="360" alt="SADBM comparison with conditional diffusion models and GANs">
+  </a>
+</p>
+
 SADBM uses an edge-enhanced SAR image as the starting point of a diffusion bridge to preserve scene structure in SAR-to-optical image translation.
