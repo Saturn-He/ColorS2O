@@ -187,7 +187,7 @@ If you use this code, please cite the paper. GitHub's "Cite this repository" but
 }
 ```
 
-## 🔗 Related Projects
+## 🔗 Our Related Projects
 
 Explore our related work on optical priors, colour control, and cross-tile consistency in SAR-to-optical image translation. Click an overview to view the full-size figure.
 
